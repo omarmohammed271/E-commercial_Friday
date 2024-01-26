@@ -14,3 +14,7 @@
     -Category
     -created_at
     -updated_at
+
+# show Category in Template
+# show products  in Templates
+# complete Pagination
