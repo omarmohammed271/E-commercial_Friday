@@ -2,6 +2,7 @@
 # Category:
     - Category_name
     - slug
+    - image
 # Product:
     -product_name
     - slug

@@ -4,12 +4,12 @@ from django.utils.text import slugify
 
 def image_upload(instance,file_name:str):
     extension = file_name.split('.')[1]
-    return f'Categories/{instance.category_name}.{extension}'
+    return f'category/{instance.category_name}.{extension}'
 # Create your models here.
 class Category(models.Model):
     category_name = models.CharField( max_length=250)
     slug = models.SlugField(unique=True,blank=True,null=True)
-    image = models.ImageField( upload_to=None, height_field=None, width_field=None, max_length=None)
+    image = models.ImageField( upload_to=image_upload, height_field=None, width_field=None, max_length=None)
 
     def save(self,*args, **kwargs):
         self.slug = slugify(self.category_name)
