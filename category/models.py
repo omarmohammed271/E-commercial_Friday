@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 
 
@@ -17,7 +18,8 @@ class Category(models.Model):
     class Meta:
         verbose_name = ("Category")
         verbose_name_plural = ("Categories")
-
+    def get_url(self):
+        return reverse('store:category_slug',args=[self.slug,])
     def __str__(self):
         return self.category_name
 

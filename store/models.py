@@ -1,5 +1,7 @@
 from django.db import models
+from django.urls import reverse
 from category.models import Category
+from django.utils.text import slugify
 
 # folder = 'product'
 def image_product_upload(instance,file_name:str):
@@ -14,6 +16,8 @@ class Product(models.Model):
     stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
     image = models.ImageField(upload_to=image_product_upload, height_field=None, width_field=None, max_length=None)
+    image2 = models.ImageField(upload_to=image_product_upload, height_field=None, width_field=None, max_length=None,blank=True,null=True)
+    image3 = models.ImageField(upload_to=image_product_upload, height_field=None, width_field=None, max_length=None,blank=True,null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -21,6 +25,14 @@ class Product(models.Model):
     class Meta:
         verbose_name = ("Product")
         verbose_name_plural = ("Products")
+
+    def get_url(self): 
+        return reverse('store:product_detail',args=[self.category.slug,self.slug])   
+
+    def save(self,*args,**kwargs):
+        self.slug = slugify(self.name)
+        super(Product,self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.name

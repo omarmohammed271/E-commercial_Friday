@@ -1,20 +1,33 @@
-# E-commercial_Friday
-# Category:
-    - Category_name
-    - slug
-    - image
-# Product:
+# E_commerce
+# Category
+    -name
+    -slug
+    -description
+    -image
+# Product
     -product_name
-    - slug
-    - price 
-    - discription
-    - image
-    - stock
+    -slug
+    -description
+    -price
+    -image
+    -stock
     -is_available
     -Category
     -created_at
-    -updated_at
-
-# show Category in Template
-# show products  in Templates
-# complete Pagination
+    -modified_at    
+# Make Templates and urls
+# display category in templates
+# display products in shop templates (without Filter and pagination)   
+# pagination 
+# product_detail[DONE]
+# Filter Store (NOT DOne)
+# filter by category[DONE]
+# context processors[DONE]
+# filter by Category in home page [Done]
+# programming Nav Bar [DONE]
+# product detail slug with category slug [DONE]
+# Cart App & Cart Page Design
+# Cart & Cart items models
+# make cart session
+# add cart to cart page
+# Functionality cart view for cart page
