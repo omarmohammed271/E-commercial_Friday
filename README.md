@@ -26,6 +26,7 @@
 # filter by Category in home page [Done]
 # programming Nav Bar [DONE]
 # product detail slug with category slug [DONE]
+# offers Model and show in list and product detail [Done]
 # Cart App & Cart Page Design
 # Cart & Cart items models
 # make cart session
