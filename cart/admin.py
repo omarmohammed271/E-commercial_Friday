@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cart,Cart_item 
+from .models import Cart,Cart_item,Coupon 
 # Register your models here.
 
 @admin.register(Cart)
@@ -10,5 +10,8 @@ class CartAdmin(admin.ModelAdmin):
 class Cart_itemAdmin(admin.ModelAdmin):
     list_display = ['product','quantity','is_active']
     
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ['name','value','created_at','is_active']
 
 

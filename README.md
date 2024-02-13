@@ -27,8 +27,13 @@
 # programming Nav Bar [DONE]
 # product detail slug with category slug [DONE]
 # offers Model and show in list and product detail [Done]
-# Cart App & Cart Page Design
-# Cart & Cart items models
-# make cart session
-# add cart to cart page
-# Functionality cart view for cart page
+# Cart App & Cart Page Design [Done]
+# Cart & Cart items models [Done]
+# make cart session [Done]
+# add cart to cart page [Done]
+# Functionality cart view for cart page [Done]
+# context processor for cart [Done]
+# added Coupon Function 
+# Search Functions
+# make Variations Model and added in add_cart functions
+# fix group of quantity for cart variations
