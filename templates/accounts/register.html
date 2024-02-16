@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="col-lg-7 mb-5 mx-auto">
+    <div class="contact-form bg-light p-30">
+        <div class="registration form">
+            <header>Signup</header>
+            <form method="POST">
+                {% csrf_token %}
+                {{form}}
+                <button type='submit' class="btn btn-primary">Register</button>
+            </form>
+            <div class="signup">
+            <span class="signup">Already have an account?
+            <label for="check">Login</label>
+            </span>
+            </div>
+        </div>
+    </div>
+</div>        
+
+
+{% endblock body %}
+

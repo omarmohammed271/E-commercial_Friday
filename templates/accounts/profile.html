@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="col-lg-7 mb-5 mx-auto">
+    <div class="contact-form bg-light p-30">
+        <div class="login form">
+            <header>Profile</header>
+                <img src="{{profile.image.url}}" alt="" style="width: 50px;height: 50px;border-radius: 40%;">
+
+               <label for=""> {{profile.user.username}} </label> <br>
+               <label for=""> {{profile.user.first_name}} </label><br>
+               <label for=""> {{profile.user.last_name}} </label><br>
+               <label for=""> {{profile.user.email}} </label><br>
+               <label for=""> {{profile.phone}} </label><br>
+                
+                <a href="{% url "accounts:edit_profile" %}" class="btn btn-primary">Edit</a>
+
+            
+        </div>
+    </div>
+</div>    
+{% endblock body %}

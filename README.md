@@ -33,7 +33,7 @@
 # add cart to cart page [Done]
 # Functionality cart view for cart page [Done]
 # context processor for cart [Done]
-# added Coupon Function 
+# added Coupon Function[Done] 
 # Search Functions
 # make Variations Model and added in add_cart functions
 # fix group of quantity for cart variations

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="col-lg-7 mb-5 mx-auto">
+    <div class="contact-form bg-light p-30">
+        <div class="login form">
+            <header>Login</header>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" placeholder="Enter your Username" name="username">
+                <input type="password" placeholder="Enter your password" name="password">
+                <a href="#">Forgot password?</a>
+                <button type='submit' class="btn btn-primary">Login</button>
+            </form>
+            <div class="signup">
+            <span class="signup">Don't have an account?
+                <a href="{% url "accounts:register" %}">Signup</a>
+            </span>
+            </div>
+        </div>
+    </div>
+</div>        
+{% endblock body %}

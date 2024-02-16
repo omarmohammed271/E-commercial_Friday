@@ -1,0 +1,67 @@
+from django.shortcuts import redirect, render
+from django.contrib.auth import authenticate,login,logout
+from django.http import Http404
+from .forms import RegisterForm,UserForm,ProfileForm
+from .models import Profile,User
+
+
+# Create your views here.
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid:
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username,password=password)
+            login(request,user)
+
+            return redirect('accounts:profile')
+        
+      
+    else:
+        form = RegisterForm()
+    return render(request,'accounts/register.html',{'form':form,})
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        if username and password:
+            user = authenticate(username=username,password=password)
+            login(request,user)
+            return redirect('accounts:profile')
+        else:
+            raise Http404("Page not found")
+
+
+    return render(request,'accounts/login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('accounts:login')
+    
+
+def profile(request):
+    
+    return render(request,'accounts/profile.html')
+
+def edit_profile(request):
+    profile = Profile.objects.get(user=request.user)
+    if request.method == "POST":
+        u = UserForm(request.POST,request.FILES,instance=request.user)
+        p = ProfileForm(request.POST,request.FILES,instance=profile)
+        if u.is_valid() and p.is_valid():
+            u.save()
+            p.save()
+            return redirect('accounts:profile')
+    else:
+
+        u = UserForm(instance=request.user)
+        p = ProfileForm(instance=profile)
+
+    context = {
+        'userForm':u,
+        'profileForm' :p,
+    }
+    return render(request,'accounts/edit_profile.html',context)
