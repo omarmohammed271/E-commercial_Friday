@@ -4,7 +4,9 @@
 <div class="col-lg-7 mb-5 mx-auto">
     <div class="contact-form bg-light p-30">
         <div class="registration form">
+            {% if profile.image %}
             <img src="{{profile.image.url}}" alt="" style="width: 50px;height: 50px;border-radius: 40%;">
+            {% endif %}
             <header>Signup</header>
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}

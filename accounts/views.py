@@ -65,3 +65,23 @@ def edit_profile(request):
         'profileForm' :p,
     }
     return render(request,'accounts/edit_profile.html',context)
+
+def reset_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password1']
+        confirm_password = request.POST['password2']
+        if password == confirm_password :
+            print('Step1')
+            user_exist = User.objects.filter(email=email).exists()
+            print('Step2')
+            if user_exist:
+                user = User.objects.get(email=email)
+                user.set_password(password)
+                user.save()
+                return redirect('accounts:login')
+
+
+
+
+    return render(request,'accounts/reset_password.html')

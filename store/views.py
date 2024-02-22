@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpResponse
 from .models import Product,Offer
 from category.models import Category
@@ -39,3 +40,14 @@ def product_detail(request,category_slug,product_slug,offer=None):
 def offer(request):
     
     return render(request,'store/offers.html')
+
+def search(request):
+    if 'keywords' in request.GET:
+        keywords = request.GET['keywords']
+        products = Product.objects.order_by('-created_at').filter(Q(description__icontains=keywords) | Q(name=keywords))
+        
+        context={
+           'products' :products, 
+        }
+        return render(request,'store/search.html',context)
+
