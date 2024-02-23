@@ -27,6 +27,8 @@ def store(request,category_slug=None):
 def product_detail(request,category_slug,product_slug,offer=None):
     category = Category.objects.get(slug=category_slug)
     product = get_object_or_404(Product,slug=product_slug,category=category)
+    
+    
     try:
         offer = Offer.objects.get(product=product)
     except:
