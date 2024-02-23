@@ -81,3 +81,6 @@ def cart(request,total=0,quantity=0,grand_total=0,coupon=None,discount=0):
         'discount':discount,
     }
     return render(request,'cart/cart.html',context)
+
+def say_hello(request):
+    print('Hello World')
