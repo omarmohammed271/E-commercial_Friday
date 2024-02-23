@@ -19,6 +19,8 @@ class Product(models.Model):
     image2 = models.ImageField(upload_to=image_product_upload, height_field=None, width_field=None, max_length=None,blank=True,null=True)
     image3 = models.ImageField(upload_to=image_product_upload, height_field=None, width_field=None, max_length=None,blank=True,null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    color = models.CharField(max_length=150,blank=True,null=True)
+    size = models.CharField(max_length=150,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
