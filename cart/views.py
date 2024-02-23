@@ -33,7 +33,6 @@ def add_cart(request,product_id):
         
     try:
         cart_item = Cart_item.objects.get(product=product,user=user) 
-        cart_item.quantity += 1
         cart_item.save()
     except Cart_item.DoesNotExist:
         cart_item = Cart_item.objects.create(
