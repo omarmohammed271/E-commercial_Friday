@@ -29,20 +29,13 @@ def add_cart(request,product_id):
         cart_item.variations = variation
         cart_item.save()
     
-    variation = Variation.objects.filter(product=product)
+    else:
         
-    try:
         cart_item = Cart_item.objects.get(product=product,user=user) 
-        cart_item.save()
-    except Cart_item.DoesNotExist:
-        cart_item = Cart_item.objects.create(
-            product=product,
-            user = user,
-            quantity=1
-        )
-        cart_item.variations=variation  
-        cart_item.save()
+        # cart_item.save()
 
+    
+    
     
     return redirect('cart:cart') 
 def remove_cart_item(request,product_id):
