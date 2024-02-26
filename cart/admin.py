@@ -8,7 +8,7 @@ class CartAdmin(admin.ModelAdmin):
     
 @admin.register(Cart_item)
 class Cart_itemAdmin(admin.ModelAdmin):
-    list_display = ['product','quantity','is_active']
+    list_display = ['product','quantity','variations','is_active']
     
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):

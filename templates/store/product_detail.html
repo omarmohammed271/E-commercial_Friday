@@ -46,6 +46,8 @@
             </div>
 
             <div class="col-lg-7 h-auto mb-30">
+                <form action="{% url "cart:add_cart" product.id %}" method="POST">
+                    {% csrf_token %}
                 <div class="h-100 bg-light p-30">
                     <h3>{{product}}</h3>
                     <div class="d-flex mb-3">
@@ -58,67 +60,52 @@
                         </div>
                         <small class="pt-1">(99 Reviews)</small>
                     </div>
-                    {% if offer.final_price %}
+                    {% if offer %}
                     <h3>${{offer.final_price}}</h3><h4 class="text-muted ml-2"><del>${{offer.product.price}}</del></h4>
+                    <h5>Save {{offer.ratio}}%</h5>
                     {% else %}
                     <h3 class="font-weight-semi-bold mb-4">${{product.price}}</h3>
-                    {% endif %}
+                    {% endif %}   
                     <p class="mb-4">{{product.description}}</p>
                     <div class="d-flex mb-3">
                         <strong class="text-dark mr-3">Sizes:</strong>
-                        <form>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-1" name="size">
-                                <label class="custom-control-label" for="size-1">XS</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-2" name="size">
-                                <label class="custom-control-label" for="size-2">S</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-3" name="size">
-                                <label class="custom-control-label" for="size-3">M</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-4" name="size">
-                                <label class="custom-control-label" for="size-4">L</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-5" name="size">
-                                <label class="custom-control-label" for="size-5">XL</label>
-                            </div>
-                        </form>
+                        <select name="size" class="form-control" required>
+                            <option value="" disabled selected>Select</option>
+                            
+                            
+                            <option value="small">small</option>
+                            <option value="medium">medium</option>
+                            <option value="large">large</option>
+                            <option value="xlarge">xlarge</option>
+                            
+                            
+                            
+                        </select>
                     </div>
                     <div class="d-flex mb-4">
                         <strong class="text-dark mr-3">Colors:</strong>
-                        <form>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-1" name="color">
-                                <label class="custom-control-label" for="color-1">Black</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-2" name="color">
-                                <label class="custom-control-label" for="color-2">White</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-3" name="color">
-                                <label class="custom-control-label" for="color-3">Red</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-4" name="color">
-                                <label class="custom-control-label" for="color-4">Blue</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-5" name="color">
-                                <label class="custom-control-label" for="color-5">Green</label>
-                            </div>
-                        </form>
+                        <select name="color" class="form-control" required>
+                            <option value="" disabled selected>Select</option>
+                            
+                            <option value="white">white</option>
+                            <option value="black">black</option>
+                            <option value="red">red</option>
+                            <option value="blue">blue</option>
+                            
+                            
+                        </select>
                     </div>
                     <div class="d-flex align-items-center mb-4 pt-2">
+                 
+                        {% if product.stock <= 0  %}
+                            <h3 class="font-weight-semi-bold mb-4">Out Of Stock </h3>
+                        {% else %}
+                        <button type="submit" class="btn btn-primary px-3" ><i class="fa fa-shopping-cart mr-1"></i>Add To Cart</button>
+                        {% endif %}
                         
-                        <a href="{% url "cart:add_cart" product.id %}" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To
-                            Cart</a>
+                            
                     </div>
+                </form>
                     <div class="d-flex pt-2">
                         <strong class="text-dark mr-2">Share on:</strong>
                         <div class="d-inline-flex">
