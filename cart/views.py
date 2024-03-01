@@ -9,52 +9,54 @@ def _cart_id(request):
     if not cart:
         cart = request.session.create()
     return cart
-# @login_required('accounts:login')
-def add_cart(request,product_id):
+@login_required(login_url='accounts:login')
+def add_cart(request,product_id,cart_item_id=None):
     user = request.user
     product = Product.objects.get(id=product_id)
-    if request.method == 'POST':
-        color = request.POST['color']
-        size = request.POST['size']
-        is_item_exist =  Cart_item.objects.filter(user=user,product=product,variations__color=color,variations__size=size).exists()
-        print(is_item_exist)
-        if is_item_exist:
-            variation = Variation.objects.get(user=user,product=product,color=color,size=size)
-            cart_item = Cart_item.objects.get(product=product,user=user,variations=variation)
-            cart_item.quantity +=1
-            cart_item.save()
-        else:    
-            variation = Variation.objects.create(user=user,product=product,color=color,size=size)
-            variation.save()
-            cart_item = Cart_item.objects.create(
-                product=product,
-                user=user,
-                quantity=1,
-                variations=variation,
-            )
-            cart_item.save()
-        return redirect('cart:cart')
-    
-    # cart_item = Cart_item.objects.get(product=product,user=user)
-    # cart_item.quantity += 1
-    # cart_item.save()
-    
-    # try:
-    #     cart_item = Cart_item.objects.get(product=product,user=user) 
-    #     cart_item.quantity += 1
-    #     cart_item.save()
-    # except Cart_item.DoesNotExist:
-    #     cart_item = Cart_item.objects.create(
-    #         product=product,
-    #         user = user,
-    #         quantity=1
-    #     )         
-    #     cart_item.save()
-    return redirect('cart:cart') 
-def remove_cart_item(request,product_id):
+    if user.is_authenticated:
+        if request.method == 'POST':
+            color = request.POST['color']
+            size = request.POST['size']
+            is_item_exist =  Cart_item.objects.filter(user=user,product=product,variations__color=color,variations__size=size).exists()
+            print(is_item_exist)
+            if is_item_exist:
+                variation = Variation.objects.get(user=user,product=product,color=color,size=size)
+                cart_item = Cart_item.objects.get(product=product,user=user,variations=variation)
+                cart_item.quantity +=1
+                cart_item.save()
+            else:    
+                variation = Variation.objects.create(user=user,product=product,color=color,size=size)
+                variation.save()
+                cart_item = Cart_item.objects.create(
+                    product=product,
+                    user=user,
+                    quantity=1,
+                    variations=variation,
+                )
+                cart_item.save()
+   
+            return redirect('cart:cart') 
+        else:
+            cart_item = Cart_item.objects.get(user=user,product=product,id=cart_item_id)
+            if cart_item.quantity>=1:
+                cart_item.quantity += 1
+                cart_item.save()
+            return redirect('cart:cart')   
+ 
 
+# def increase_to_cart(request,product_id,cart_item_id):
+#     user = request.user
+#     product = Product.objects.get(id=product_id)
+#     cart_item = Cart_item.objects.get(user=user,product=product,id=cart_item_id)
+#     if cart_item.quantity>=1:
+#         cart_item.quantity += 1
+#         cart_item.save()
+#     return redirect('cart:cart')    
+
+def remove_cart_item(request,product_id,cart_item_id):
     product = Product.objects.get(id=product_id)
-    cart_item = Cart_item.objects.get(product=product,user=request.user)
+    # variation = Variation.objects.get(user=request.user,product=product)
+    cart_item = Cart_item.objects.get(product=product,user=request.user,id=cart_item_id)
     if cart_item.quantity >1:
         cart_item.quantity -= 1
         cart_item.save()
@@ -62,14 +64,14 @@ def remove_cart_item(request,product_id):
         cart_item.delete()
     return redirect('cart:cart')
 
-def remove_cart(request,product_id):
+def remove_cart(request,product_id,cart_item_id):
    
     product = Product.objects.get(id=product_id)
-    cart_item = Cart_item.objects.get(product=product,user=request.user)
+    cart_item = Cart_item.objects.get(product=product,user=request.user,id=cart_item_id)
     cart_item.delete()
     return redirect('cart:cart')
 
-# @login_required('accounts:login')
+@login_required(login_url='accounts:login')
 def cart(request,total=0,quantity=0,grand_total=0,coupon=None,discount=0):
     try:
         
