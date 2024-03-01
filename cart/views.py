@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
 from .models import Cart,Cart_item,Coupon
-from store.models import Product
+from store.models import Product,Variation
 # Create your views here.
 
 def _cart_id(request):
@@ -8,31 +9,36 @@ def _cart_id(request):
     if not cart:
         cart = request.session.create()
     return cart
-def add_cart(request,product_id):
+@login_required(login_url='accounts:login')
+def add_cart(request,product_id,cart_item_id=None):
+    user = request.user
     product = Product.objects.get(id=product_id)
-    try:
-        cart = Cart.objects.get(cart_id=_cart_id(request))
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(
-            cart_id=_cart_id(request)
-        )   
-        cart.save()
-    try:
-        cart_item = Cart_item.objects.get(product=product,cart=cart) 
-        cart_item.quantity += 1
-        cart_item.save()
-    except Cart_item.DoesNotExist:
-        cart_item = Cart_item.objects.create(
-            product=product,
-            cart = cart,
-            quantity=1
-        )         
-        cart_item.save()
-    return redirect('cart:cart') 
-def remove_cart_item(request,product_id):
-    cart = Cart.objects.get(cart_id=_cart_id(request))
+    if request.method == 'POST':
+        color = request.POST['color']
+        size = request.POST['size']
+        is_item_exist = Cart_item.objects.filter(user=user,product=product,vartions__color=color,vartions__size=size).exists()
+        if is_item_exist:
+            cart_item = Cart_item.objects.get(user=user,product=product,vartions__color=color,vartions__size=size)
+            cart_item.quantity += 1
+            cart_item.save()
+            return redirect('cart:cart')
+        else:
+            variation = Variation.objects.create(product=product,color=color,size=size)
+            variation.save()
+            cart_item = Cart_item.objects.create(user=user,product=product,quantity = 1,vartions=variation)
+            cart_item.save()
+            return redirect('cart:cart')
+    else:
+        cart_item = Cart_item.objects.get(user=user,product=product,id=cart_item_id)
+        if cart_item.quantity>=1:
+            cart_item.quantity +=1
+            cart_item.save()
+            return redirect('cart:cart')        
+
+     
+def remove_cart_item(request,product_id,cart_item_id):
     product = Product.objects.get(id=product_id)
-    cart_item = Cart_item.objects.get(product=product,cart=cart)
+    cart_item = Cart_item.objects.get(product=product,user=request.user,id=cart_item_id)
     if cart_item.quantity >1:
         cart_item.quantity -= 1
         cart_item.save()
@@ -40,17 +46,16 @@ def remove_cart_item(request,product_id):
         cart_item.delete()
     return redirect('cart:cart')
 
-def remove_cart(request,product_id):
-    cart = Cart.objects.get(cart_id=_cart_id(request))
+def remove_cart(request,product_id,cart_item_id):
     product = Product.objects.get(id=product_id)
-    cart_item = Cart_item.objects.get(product=product,cart=cart)
+    cart_item = Cart_item.objects.get(product=product,user=request.user,id=cart_item_id)
     cart_item.delete()
     return redirect('cart:cart')
 
 def cart(request,total=0,quantity=0,grand_total=0,coupon=None,discount=0):
     try:
-        cart = Cart.objects.get(cart_id=_cart_id(request))
-        cart_items = Cart_item.objects.all().filter(cart=cart,is_active=True)
+        
+        cart_items = Cart_item.objects.all().filter(user=request.user,is_active=True)
         for cart_item in cart_items:
             total += (cart_item.product.price)*cart_item.quantity
             quantity += cart_item.quantity
