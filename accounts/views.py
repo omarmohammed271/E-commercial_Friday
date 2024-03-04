@@ -2,7 +2,8 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate,login,logout
 from django.http import Http404
 from .forms import RegisterForm,UserForm,ProfileForm
-from .models import Profile,User
+from .models import Profile,User,Order
+from cart.models import Cart_item
 
 
 # Create your views here.
@@ -85,3 +86,20 @@ def reset_password(request):
 
 
     return render(request,'accounts/reset_password.html')
+
+def place_order(request,total=0,quantity=0,grand_total=0):
+    cart_items = Cart_item.objects.all().filter(user=request.user,is_active=True)
+    for item in cart_items:
+        total += (item.product.price)*item.quantity
+        quantity += item.quantity
+    shipping = 20   
+    grand_total = shipping+total  
+
+
+    context = {
+        'cart_items' : cart_items,
+        'grand_total' :grand_total,
+        'shipping' : shipping,
+        'total' : total,
+    }
+    return render(request,'accounts/place_order.html',context)
