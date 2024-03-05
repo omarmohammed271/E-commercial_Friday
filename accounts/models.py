@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from cart.models import Cart_item
+from store.models import Product,Variation
 # Create your models here.
 # Person = user + profile
 
@@ -27,9 +28,9 @@ class Profile(models.Model):
         if created:
             Profile.objects.create(user=instance)    
 
-class Order(models.Model):
+
+class Orderr(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cart_item = models.ForeignKey(Cart_item, on_delete=models.CASCADE)
     f_name = models.CharField(max_length=150)
     l_name = models.CharField(max_length=150)
     email = models.EmailField(max_length=254)
@@ -37,7 +38,10 @@ class Order(models.Model):
     address1 = models.CharField(max_length=150)
     address2 = models.CharField(max_length=150)
     city = models.CharField(max_length=150)
-
+    order_total = models.FloatField()
+    is_ordered = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = ("Order")
@@ -46,8 +50,20 @@ class Order(models.Model):
     def __str__(self):
         return f'{self.f_name} {self.l_name}'
 
-    
-    
+
+class OrderProduct(models.Model):
+    order = models.ForeignKey(Orderr, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    variations = models.ForeignKey(Variation, on_delete=models.CASCADE, blank=True)
+    quantity = models.IntegerField()
+    product_price = models.FloatField()
+    ordered = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.product.name    
 
 
 

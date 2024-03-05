@@ -2,8 +2,9 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate,login,logout
 from django.http import Http404
 from .forms import RegisterForm,UserForm,ProfileForm
-from .models import Profile,User,Order
+from .models import Profile,User,Orderr,OrderProduct
 from cart.models import Cart_item
+from store.models import Product
 
 
 # Create your views here.
@@ -87,14 +88,47 @@ def reset_password(request):
 
     return render(request,'accounts/reset_password.html')
 
-def place_order(request,total=0,quantity=0,grand_total=0):
+def place_order(request,total=0,quantity=0,grand_total=0,address2=None):
     cart_items = Cart_item.objects.all().filter(user=request.user,is_active=True)
     for item in cart_items:
         total += (item.product.price)*item.quantity
         quantity += item.quantity
     shipping = 20   
     grand_total = shipping+total  
-
+    if request.method == 'POST':
+        f_name = request.POST['f_name']
+        l_name = request.POST['l_name']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        address1 = request.POST['address1']
+        address2 = request.POST['address2']
+        city = request.POST['city']
+        order = Orderr.objects.create(
+            user=request.user,
+            f_name=f_name,l_name=l_name,
+            email=email,
+            phone=phone,
+            address1=address1,address2=address2,
+            city=city,
+            order_total= grand_total,
+            is_ordered=True,
+        )
+        order.save()
+        for item in cart_items:
+            orderproduct = OrderProduct()
+            orderproduct.order_id = order.id
+            orderproduct.user_id = request.user.id
+            orderproduct.product = item.product
+            orderproduct.variations = item.variations
+            orderproduct.quantity = item.quantity
+            orderproduct.product_price=item.product.price
+            orderproduct.ordered = True
+            orderproduct.save()
+            product = Product.objects.get(id=item.product_id)
+            product.stock -= item.quantity
+            product.save()    
+        Cart_item.objects.filter(user=request.user).delete()
+        return redirect('home')    
 
     context = {
         'cart_items' : cart_items,
