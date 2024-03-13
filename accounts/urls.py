@@ -12,4 +12,5 @@ urlpatterns = [
     path('edit_profile/',views.edit_profile,name='edit_profile'),
     path('reset_password/',views.reset_password,name='reset_password'),
     path('place_order/',views.place_order,name='place_order'),
+    
 ]
